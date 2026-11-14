@@ -1,53 +1,38 @@
-# SEO Audit personale
+# 📡 SEO Radar
 
-Inserisci il link di un sito e l'app scansiona **tutte le pagine** (link interni + sitemap) e ti dà:
+Tool SEO personale: posizioni **reali** su Google (SERP lette in tempo reale con Serper.dev), competitor, quota di visibilità, keyword gap, quick win, idee keyword e audit tecnico del sito.
 
-| Scheda | Cosa trovi |
-|---|---|
-| 📊 Panoramica | Punteggio di salute, priorità da sistemare, keyword principali |
-| 🚨 Problemi | 27 controlli tecnici e on-page (404, redirect, title/meta duplicati o mancanti, H1, contenuti scarsi, orfane, noindex, canonical, alt, schema, Open Graph, profondità, velocità server…) con **come risolvere** e da quali pagine sono linkati |
-| 📄 Pagine | Tabella completa di ogni URL |
-| 🔑 Keyword | Keyword del sito, keyword principale/secondarie per pagina, **cannibalizzazioni**, volumi (con DataForSEO) |
-| 💡 Idee keyword | Suggerimenti e domande reali dall'autocompletamento di Google (gratis) |
-| 🥊 Competitor | Chi si posiziona su Google per le tue keyword, tue posizioni, ricerche correlate e "Le persone hanno chiesto anche" (serve Serper o DataForSEO) |
-| 🆚 Confronta sito | Scansiona un competitor e mostra i temi che lui tratta e tu no (**keyword gap**) |
-| ⚡ Velocità | PageSpeed Insights: Lighthouse + Core Web Vitals reali |
-| 🔗 Link | Pagine più linkate, orfane, pagine fuori sitemap, robots.txt |
-| ⬇️ Esporta | Report Excel con tutte le schede |
+## Come funziona
+1. **Nuova analisi**: inserisci il sito, scegli il mercato (Italia o città) e la profondità (top 10 o top 100).
+2. **Trova keyword (gratis)**: l'app scansiona il sito, estrae le keyword dalle pagine e le allarga con i suggerimenti di Google. Puoi aggiungerne a mano.
+3. **Controlla posizioni su Google**: scegli le keyword da verificare e vedi prima quanti crediti costano. L'app legge la SERP vera di ogni keyword.
+4. Esplora **Dashboard, Posizioni, Competitor (con testa a testa), Keyword gap, Idee keyword, Audit tecnico**.
+5. Da **Progetto** salvi l'analisi in .json, per riaprirla senza spendere crediti o confrontarla con un'analisi futura (colonna Variazione ▲▼), e scarichi l'Excel.
 
-## Chiavi API (tutte facoltative)
+## Costi
+- Serper.dev: 2.500 ricerche gratuite alla registrazione, poi circa 1 $ ogni 1.000 ricerche.
+- 1 keyword in top 10 = 1 credito; in top 100 = 2 crediti.
+- Un'analisi da 150 keyword in top 100 consuma circa 300 crediti.
 
-Senza chiavi funzionano già: scansione completa, problemi, keyword del sito, cannibalizzazioni, idee keyword, confronto competitor, velocità.
+## Visibilità %
+È una stima: per ogni keyword si assegna il CTR medio della posizione (1ª ≈ 28%, 2ª ≈ 15%, … 10ª ≈ 2%). Il risultato si confronta con il massimo possibile, cioè essere primi su tutte le keyword analizzate. Le keyword hanno tutte lo stesso peso perché i volumi di ricerca non sono inclusi.
 
-- **Serper.dev** → competitor e posizionamenti. Registrati su serper.dev: ci sono crediti gratuiti iniziali, poi si paga a consumo (1 keyword = 1 ricerca).
-- **DataForSEO** → volumi di ricerca mensili, concorrenza e CPC (dati Google Ads) e, in alternativa a Serper, SERP. Pagamento a consumo con deposito minimo; costi per singola richiesta molto bassi.
-- **PageSpeed API key** → solo se fai molti test (Google Cloud Console → abilita "PageSpeed Insights API" → crea chiave). Gratuita.
+## Secrets (Streamlit Cloud → Settings → Secrets)
+```
+APP_PASSWORD = "la-tua-password"
+SERPER_API_KEY = "la-tua-chiave-serper"
+```
 
-Verifica sempre prezzi e quote aggiornati sui siti dei fornitori.
+## Tema
+Il file `.streamlit/config.toml` forza il tema chiaro:
+```
+[theme]
+base = "light"
+primaryColor = "#6366f1"
+```
 
-## Metterla online gratis (Streamlit Community Cloud)
-
-1. Crea un account su **github.com** e un **repository privato** (es. `seo-audit`).
-2. Carica nel repository tutti i file di questa cartella (`app.py`, `crawler.py`, `analysis.py`, `requirements.txt`, la cartella `.streamlit` **senza** `secrets.toml`).
-3. Vai su **share.streamlit.io**, accedi con GitHub e crea una nuova app: repository `seo-audit`, file principale `app.py`.
-4. Nelle impostazioni avanzate, nella sezione **Secrets**, incolla il contenuto di `.streamlit/secrets.toml.example` compilato con la tua password e le chiavi.
-5. Deploy. Avrai un indirizzo tipo `https://tuonome-seo-audit.streamlit.app` protetto da password.
-
-Le chiavi messe nei Secrets restano sul server e non finiscono nel codice. Per cambiarle basta modificare i Secrets dall'app.
-
-## Usarla sul tuo computer
-
-```bash
+## Avvio in locale
+```
 pip install -r requirements.txt
-cp .streamlit/secrets.toml.example .streamlit/secrets.toml   # e compila
 streamlit run app.py
 ```
-Si apre su http://localhost:8501.
-
-## Note
-
-- **Siti grandi**: il piano gratuito di Streamlit ha poca memoria; fino a 2-3.000 pagine va bene. Per e-commerce enormi usa la versione locale.
-- **Siti che bloccano i bot** (Cloudflare "Under attack" o simili) possono restituire errori 403: abbassa le richieste in parallelo o lancia l'analisi in locale.
-- **Siti costruiti solo in JavaScript** (alcuni Wix/React): il crawler legge l'HTML che arriva dal server, quindi potrebbe vedere poco contenuto.
-- Le keyword del sito sono **estratte dai contenuti**, non sono posizionamenti: le posizioni reali le dà la scheda Competitor.
-- Il punteggio di salute è indicativo e serve a confrontare il sito prima/dopo gli interventi.
